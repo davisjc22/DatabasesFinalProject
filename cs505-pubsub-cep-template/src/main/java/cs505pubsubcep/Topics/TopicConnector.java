@@ -52,12 +52,13 @@ public class TopicConnector {
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
 
                 String message = new String(delivery.getBody(), "UTF-8");
-                System.out.println(" [x] Received Batch'" +
-                        delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
+                // TODO: COMMENT THIS BACK
+                // System.out.println(" [x] Received Batch'" +
+                //         delivery.getEnvelope().getRoutingKey() + "':'" + message + "'");
 
                 List<Map<String,String>> incomingList = gson.fromJson(message, typeOf);
                 for(Map<String,String> map : incomingList) {
-                    System.out.println("INPUT CEP EVENT: " +  map);
+                    // System.out.println("INPUT CEP EVENT: " +  map);
                     Launcher.cepEngine.input(Launcher.inputStreamName, gson.toJson(map));
                 }
                 System.out.println("");

@@ -3,6 +3,9 @@ package cs505pubsubcep;
 import cs505pubsubcep.CEP.CEPEngine;
 import cs505pubsubcep.Topics.TopicConnector;
 import cs505pubsubcep.httpfilters.AuthenticationFilter;
+
+import cs505pubsubcep.database.DBEngine;
+
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -15,13 +18,14 @@ import java.net.URI;
 public class Launcher {
 
     public static final String API_SERVICE_KEY = "12110132"; //Change this to your student id
-    public static final int WEB_PORT = 8082;
+    public static final int WEB_PORT = 8088;
     public static String inputStreamName = null;
     public static long accessCount = -1;
 
     public static TopicConnector topicConnector;
 
     public static CEPEngine cepEngine = null;
+    public static DBEngine dbEngine;
 
     public static void main(String[] args) throws IOException {
 
@@ -56,6 +60,11 @@ public class Launcher {
         //starting Collector
         topicConnector = new TopicConnector();
         topicConnector.connect();
+
+        System.out.println("Starting Embedded Database...");
+        //Embedded database initialization
+        dbEngine = new DBEngine();
+        System.out.println("Embedded Database Started...");
 
         //Embedded HTTP initialization
         startServer();

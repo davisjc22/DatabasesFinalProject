@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Sun Apr 26 15:47:30 EDT 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0171-b807-c8d1-00000194de00 
+on database directory memory:/home/tlha252/DatabasesFinalProject/cs505-pubsub-cep-template/myDatabase with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@5bc2b487 
+Loaded from file:/home/tlha252/DatabasesFinalProject/cs505-pubsub-cep-template/target/cs505-pubsub-cep-template-1.0-SNAPSHOT.jar
+java.vendor=Private Build
+java.runtime.version=11.0.5+10-post-Ubuntu-0ubuntu1.118.04
+user.dir=/home/tlha252/DatabasesFinalProject/cs505-pubsub-cep-template
+os.name=Linux
+os.arch=amd64
+os.version=4.15.0-74-generic
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
