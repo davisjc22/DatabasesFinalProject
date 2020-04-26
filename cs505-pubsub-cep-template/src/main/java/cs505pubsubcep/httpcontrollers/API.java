@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Arrays;
 
 @Path("/api")
 public class API {
@@ -114,5 +115,121 @@ public class API {
         return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
     }
 
+    @GET
+    @Path("/getteam")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response getTeam(@HeaderParam("X-Auth-API-Key") String authKey) {
+     String responseString = "{}";
+     try {
+
+       //get remote ip address from request
+       String remoteIP = request.get().getRemoteAddr();
+       //get the timestamp of the request
+       long access_ts = System.currentTimeMillis();
+       System.out.println("IP: " + remoteIP + " Timestamp: " + access_ts);
+
+       int[] student_ids = new int[] { 12111623, 12110132 };
+
+       Map<String,String> responseMap = new HashMap<>();
+       if(Launcher.cepEngine != null) {
+               responseMap.put("team_name", "fixItNow");
+               responseMap.put("Team_members_sids", Arrays.toString(student_ids));
+               responseMap.put("app_status_code", "1");
+
+       } else {
+         responseMap.put("team_name", "fixItNow");
+         responseMap.put("Team_members_sids", Arrays.toString(student_ids));
+         responseMap.put("app_status_code", "0");
+       }
+
+       responseString = gson.toJson(responseMap);
+
+     } catch (Exception ex) {
+
+         StringWriter sw = new StringWriter();
+         ex.printStackTrace(new PrintWriter(sw));
+         String exceptionAsString = sw.toString();
+         ex.printStackTrace();
+
+         return Response.status(500).entity(exceptionAsString).build();
+     }
+     return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+
+   }
+
+   @GET
+   @Path("/reset")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response reset(@HeaderParam("X-Auth-API-Key") String authKey) {
+    String responseString = "{}";
+    try {
+
+      //get remote ip address from request
+      String remoteIP = request.get().getRemoteAddr();
+      //get the timestamp of the request
+      long access_ts = System.currentTimeMillis();
+      System.out.println("IP: " + remoteIP + " Timestamp: " + access_ts);
+
+      Map<String,String> responseMap = new HashMap<>();
+      if(Launcher.cepEngine != null) {
+              responseMap.put("reset_status_code", "1");
+
+      } else {
+        responseMap.put("reset_status_code", "0");
+      }
+
+      responseString = gson.toJson(responseMap);
+
+    } catch (Exception ex) {
+
+        StringWriter sw = new StringWriter();
+        ex.printStackTrace(new PrintWriter(sw));
+        String exceptionAsString = sw.toString();
+        ex.printStackTrace();
+
+        return Response.status(500).entity(exceptionAsString).build();
+    }
+    return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+
+  }
+
+  @GET
+  @Path("/zipalertlist")
+ @Produces(MediaType.APPLICATION_JSON)
+ public Response zipAlertList(@HeaderParam("X-Auth-API-Key") String authKey) {
+   String responseString = "{}";
+   try {
+
+     //get remote ip address from request
+     String remoteIP = request.get().getRemoteAddr();
+     //get the timestamp of the request
+     long access_ts = System.currentTimeMillis();
+     System.out.println("IP: " + remoteIP + " Timestamp: " + access_ts);
+
+     String[] zip_list = new String[] { "40351","40513","40506" };
+
+
+     Map<String,String> responseMap = new HashMap<>();
+     if(Launcher.cepEngine != null) {
+             responseMap.put("ziplist", Arrays.toString(zip_list));
+
+     } else {
+       responseMap.put("ziplist",  Arrays.toString(zip_list));
+     }
+
+     responseString = gson.toJson(responseMap);
+
+   } catch (Exception ex) {
+
+       StringWriter sw = new StringWriter();
+       ex.printStackTrace(new PrintWriter(sw));
+       String exceptionAsString = sw.toString();
+       ex.printStackTrace();
+
+       return Response.status(500).entity(exceptionAsString).build();
+   }
+   return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+
+ }
 
 }

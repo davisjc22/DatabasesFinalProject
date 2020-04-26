@@ -1,6 +1,8 @@
 package cs505pubsubcep.CEP;
 
 import io.siddhi.core.util.transport.InMemoryBroker;
+import com.google.gson.Gson;
+
 
 public class OutputSubscriber implements InMemoryBroker.Subscriber {
 
