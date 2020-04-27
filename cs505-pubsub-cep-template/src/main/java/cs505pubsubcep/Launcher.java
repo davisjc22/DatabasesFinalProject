@@ -5,6 +5,7 @@ import cs505pubsubcep.Topics.TopicConnector;
 import cs505pubsubcep.httpfilters.AuthenticationFilter;
 
 import cs505pubsubcep.database.DBEngine;
+import cs505pubsubcep.database.GraphDBManager;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
