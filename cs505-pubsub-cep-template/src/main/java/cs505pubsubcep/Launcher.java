@@ -35,7 +35,7 @@ public class Launcher {
         //Embedded database initialization
 
         cepEngine = new CEPEngine();
-
+        dbManager = new GraphDBManager();
 
         //START MODIFY
         inputStreamName = "PatientInStream";
