@@ -42,13 +42,13 @@ public class Launcher {
         String inputStreamAttributesString = "first_name string, last_name string, mrn string, zip_code string, patient_status_code string";
 
         String outputStreamName = "PatientOutStream";
-        String outputStreamAttributesString = "patient_status_code string, count long";
+        String outputStreamAttributesString = "mrn string, zip_code string, patient_status_code string";
 
 
         String queryString = " " +
-                "from PatientInStream#window.timeBatch(5 sec) " +
-                "select patient_status_code, count() as count " +
-                "group by patient_status_code " +
+                "from PatientInStream#window.timeBatch(15 sec) " +
+                "select mrn, zip_code, patient_status_code " +
+                "group by zip_code " +
                 "insert into PatientOutStream; ";
 
         //END MODIFY
