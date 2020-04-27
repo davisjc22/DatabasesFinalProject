@@ -5,4 +5,5 @@
 /home/tlha252/DatabasesFinalProject/cs505-pubsub-cep-template/src/main/java/cs505pubsubcep/CEP/OutputSubscriber.java
 /home/tlha252/DatabasesFinalProject/cs505-pubsub-cep-template/src/main/java/cs505pubsubcep/database/DBEngine.java
 /home/tlha252/DatabasesFinalProject/cs505-pubsub-cep-template/src/main/java/cs505pubsubcep/httpfilters/AuthenticationFilter.java
+/home/tlha252/DatabasesFinalProject/cs505-pubsub-cep-template/src/main/java/cs505pubsubcep/models/ZipCodeMap.java
 /home/tlha252/DatabasesFinalProject/cs505-pubsub-cep-template/src/main/java/cs505pubsubcep/Topics/TopicConnector.java

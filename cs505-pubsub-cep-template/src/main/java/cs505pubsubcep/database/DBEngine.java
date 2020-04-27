@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.*;
+import cs505pubsubcep.models.ZipCodeMap;
+
 
 
 public class DBEngine {
@@ -111,6 +113,7 @@ public class DBEngine {
                 "(" +
                 "   zip_code int," +
                 "   positives int," +
+                "   old_positives int," +
                 "   alert smallint" +
                 ")";
 
@@ -299,6 +302,25 @@ public class DBEngine {
     }
     return accessMap;
   }
+
+  public ZipCodeMap getIndividualZipCode(String Zip) {
+    ZipCodeMap zipCode = null;
+    try {
+      String queryString = "SELECT * FROM zipcodes WHERE zip_code = " + Zip;
+      try(Connection conn = ds.getConnection()) {
+          try (Statement stmt = conn.createStatement()) {
+              try(ResultSet rs = stmt.executeQuery(queryString)) {
+                while (rs.next()) {
+                  zipCode = new ZipCodeMap(rs.getString("zip_code"), rs.getInt("old_positives"), rs.getInt("positives"),  rs.getInt("alert"));
+                }
+              }
+          }
+      }
+  } catch(Exception ex) {
+      ex.printStackTrace();
+  }
+  return zipCode;
+}
 
   public Set<String> getAlertedZipCodes() {
     Set<String> zipCodes = new HashSet<String>();

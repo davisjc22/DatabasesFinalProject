@@ -1,3 +1,4 @@
+cs505pubsubcep/models/ZipCodeMap.class
 cs505pubsubcep/CEP/accessRecord.class
 cs505pubsubcep/httpcontrollers/API.class
 cs505pubsubcep/database/DBEngine$1.class
