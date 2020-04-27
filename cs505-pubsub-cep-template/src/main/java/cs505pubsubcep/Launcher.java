@@ -27,6 +27,7 @@ public class Launcher {
 
     public static CEPEngine cepEngine = null;
     public static DBEngine dbEngine;
+    public static GraphDBManager dbManager;
 
     public static void main(String[] args) throws IOException {
 
@@ -35,7 +36,7 @@ public class Launcher {
         //Embedded database initialization
 
         cepEngine = new CEPEngine();
-        dbManager = new GraphDBManager();
+        
 
         //START MODIFY
         inputStreamName = "PatientInStream";
@@ -66,6 +67,9 @@ public class Launcher {
         //Embedded database initialization
         dbEngine = new DBEngine();
         System.out.println("Embedded Database Started...");
+        //Graph database initialization
+        dbManager = new GraphDBManager();
+        System.out.println("Graph Database Started...");
 
         //Embedded HTTP initialization
         startServer();
