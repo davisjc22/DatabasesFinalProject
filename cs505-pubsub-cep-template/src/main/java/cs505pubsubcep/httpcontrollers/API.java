@@ -16,6 +16,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Arrays;
+import java.util.*;
 
 @Path("/api")
 public class API {
@@ -24,6 +25,9 @@ public class API {
     private javax.inject.Provider<org.glassfish.grizzly.http.server.Request> request;
 
     private Gson gson;
+
+    public static Integer NUM_OF_POSITIVES = 0;
+    public static Integer NUM_OF_NEGATIVES = 0;
 
     public API() {
         gson = new Gson();
@@ -128,22 +132,20 @@ public class API {
        long access_ts = System.currentTimeMillis();
        System.out.println("IP: " + remoteIP + " Timestamp: " + access_ts);
 
-       int[] student_ids = new int[] { 12111623, 12110132 };
+       String[] student_ids = new String[] { "12111623", "12110132" };
 
-       Map<String,String> responseMap = new HashMap<>();
+       Map<String, Object> responseMap = new HashMap<>();
        if(Launcher.cepEngine != null) {
                responseMap.put("team_name", "fixItNow");
-               responseMap.put("Team_members_sids", Arrays.toString(student_ids));
+               responseMap.put("Team_members_sids", student_ids);
                responseMap.put("app_status_code", "1");
 
        } else {
          responseMap.put("team_name", "fixItNow");
-         responseMap.put("Team_members_sids", Arrays.toString(student_ids));
+         responseMap.put("Team_members_sids", student_ids);
          responseMap.put("app_status_code", "0");
        }
-
        responseString = gson.toJson(responseMap);
-
      } catch (Exception ex) {
 
          StringWriter sw = new StringWriter();
@@ -154,11 +156,10 @@ public class API {
          return Response.status(500).entity(exceptionAsString).build();
      }
      return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
-
    }
 
-   @GET
-   @Path("/reset")
+  @GET
+  @Path("/reset")
   @Produces(MediaType.APPLICATION_JSON)
   public Response reset(@HeaderParam("X-Auth-API-Key") String authKey) {
     String responseString = "{}";
@@ -171,10 +172,17 @@ public class API {
       System.out.println("IP: " + remoteIP + " Timestamp: " + access_ts);
 
       Map<String,String> responseMap = new HashMap<>();
-      if(Launcher.cepEngine != null) {
-              responseMap.put("reset_status_code", "1");
+      try {
+        // reset static counters and reset embedded derby db
+        NUM_OF_POSITIVES = 0;
+        NUM_OF_NEGATIVES = 0;
+        Launcher.dbEngine.dropTable("zipcodes");
+        Launcher.dbEngine.initDB();
 
-      } else {
+        // if resetting things does not throw exception, return a successful 1 response
+        responseMap.put("reset_status_code", "1");
+      } catch (Exception ex) {
+        // if an exception  is caught at any point, return a 0
         responseMap.put("reset_status_code", "0");
       }
 
@@ -193,8 +201,8 @@ public class API {
 
   }
 
-  @GET
-  @Path("/zipalertlist")
+ @GET
+ @Path("/zipalertlist")
  @Produces(MediaType.APPLICATION_JSON)
  public Response zipAlertList(@HeaderParam("X-Auth-API-Key") String authKey) {
    String responseString = "{}";
@@ -206,16 +214,12 @@ public class API {
      long access_ts = System.currentTimeMillis();
      System.out.println("IP: " + remoteIP + " Timestamp: " + access_ts);
 
-     String[] zip_list = new String[] { "40351","40513","40506" };
+     // String[] zip_list = new String[] { "40351","40513","40506" };
+     Set<String> alertedZipCodes = Launcher.dbEngine.getAlertedZipCodes();
 
 
-     Map<String,String> responseMap = new HashMap<>();
-     if(Launcher.cepEngine != null) {
-             responseMap.put("ziplist", Arrays.toString(zip_list));
-
-     } else {
-       responseMap.put("ziplist",  Arrays.toString(zip_list));
-     }
+     Map<String, Object> responseMap = new HashMap<>();
+     responseMap.put("ziplist", alertedZipCodes);
 
      responseString = gson.toJson(responseMap);
 
@@ -229,7 +233,85 @@ public class API {
        return Response.status(500).entity(exceptionAsString).build();
    }
    return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
-
  }
 
+ @GET
+ @Path("/alertlist")
+ @Produces(MediaType.APPLICATION_JSON)
+ public Response alertList(@HeaderParam("X-Auth-API-Key") String authKey) {
+   String responseString = "{}";
+   try {
+
+     //get remote ip address from request
+     String remoteIP = request.get().getRemoteAddr();
+     //get the timestamp of the request
+     long access_ts = System.currentTimeMillis();
+     System.out.println("IP: " + remoteIP + " Timestamp: " + access_ts);
+
+     // String[] zip_list = new String[] { "40351","40513","40506" };
+     Set<String> alertedZipCodes = Launcher.dbEngine.getAlertedZipCodes();
+
+     Map<String, Object> responseMap = new HashMap<>();
+     if (alertedZipCodes.size() >= 5) {
+       responseMap.put("state_status", "1");
+     } else {
+       responseMap.put("state_status", "0");
+     }
+     responseString = gson.toJson(responseMap);
+
+   } catch (Exception ex) {
+
+       StringWriter sw = new StringWriter();
+       ex.printStackTrace(new PrintWriter(sw));
+       String exceptionAsString = sw.toString();
+       ex.printStackTrace();
+
+       return Response.status(500).entity(exceptionAsString).build();
+   }
+   return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+ }
+
+  @GET
+  @Path("/testcount")
+  @Produces(MediaType.APPLICATION_JSON)
+  public Response diagnosisCounter(@HeaderParam("X-Auth-API-Key") String authKey) {
+    String responseString = "{}";
+    try {
+
+      //get remote ip address from request
+      String remoteIP = request.get().getRemoteAddr();
+      //get the timestamp of the request
+      long access_ts = System.currentTimeMillis();
+      System.out.println("IP: " + remoteIP + " Timestamp: " + access_ts);
+
+      Map<String,String> responseMap = new HashMap<>();
+      if(Launcher.cepEngine != null) {
+              responseMap.put("positive_test", NUM_OF_POSITIVES.toString());
+              responseMap.put("negative_test", NUM_OF_NEGATIVES.toString());
+      } else {
+        responseMap.put("positive_test", "234234");
+        responseMap.put("negative_test", "234234");
+      }
+
+      responseString = gson.toJson(responseMap);
+
+    } catch (Exception ex) {
+
+        StringWriter sw = new StringWriter();
+        ex.printStackTrace(new PrintWriter(sw));
+        String exceptionAsString = sw.toString();
+        ex.printStackTrace();
+
+        return Response.status(500).entity(exceptionAsString).build();
+    }
+    return Response.ok(responseString).header("Access-Control-Allow-Origin", "*").build();
+  }
+
+  public static void addToPositiveCount(Integer amountToAdd) {
+    NUM_OF_POSITIVES += amountToAdd;
+  }
+
+  public static void addToNegativeCount(Integer amountToAdd) {
+    NUM_OF_NEGATIVES += amountToAdd;
+  }
 }

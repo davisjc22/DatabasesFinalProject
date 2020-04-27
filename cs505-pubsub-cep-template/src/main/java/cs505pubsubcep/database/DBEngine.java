@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.*;
 
 
 public class DBEngine {
@@ -105,10 +107,10 @@ public class DBEngine {
 
     public void initDB() {
 
-        String createRNode = "CREATE TABLE zipcodestatus" +
+        String createRNode = "CREATE TABLE zipcodes" +
                 "(" +
-                "   zip_code varchar(255)," +
-                "   status_code int," +
+                "   zip_code int," +
+                "   positives int," +
                 "   alert smallint" +
                 ")";
 
@@ -258,4 +260,66 @@ public class DBEngine {
         return accessMapList;
     }
 
+    public boolean zipCodeExists(String zipCode) {
+      boolean exist = false;
+      try {
+        String queryString = "SELECT * FROM zipcodes";
+        try(Connection conn = ds.getConnection()) {
+            try (Statement stmt = conn.createStatement()) {
+                try(ResultSet rs = stmt.executeQuery(queryString)) {
+                  while (rs.next()) {
+                      if (rs.getString("zip_code").equals(zipCode)) {
+                        exist = true;
+                      }
+                  }
+                }
+            }
+        }
+    } catch(Exception ex) {
+        ex.printStackTrace();
+    }
+    return exist;
+  }
+
+    public Map<String,Integer> getZipCodes() {
+      Map<String, Integer> accessMap = new HashMap<>();
+      try {
+        String queryString = "SELECT * FROM zipcodes";
+        try(Connection conn = ds.getConnection()) {
+            try (Statement stmt = conn.createStatement()) {
+                try(ResultSet rs = stmt.executeQuery(queryString)) {
+                    while (rs.next()) {
+                        accessMap.put(rs.getString("zip_code"), rs.getInt("positives"));
+                    }
+                }
+            }
+        }
+    } catch(Exception ex) {
+        ex.printStackTrace();
+    }
+    return accessMap;
+  }
+
+  public Set<String> getAlertedZipCodes() {
+    Set<String> zipCodes = new HashSet<String>();
+    try {
+      String queryString = "SELECT * FROM zipcodes WHERE alert = 1";
+      try(Connection conn = ds.getConnection()) {
+          try (Statement stmt = conn.createStatement()) {
+              try(ResultSet rs = stmt.executeQuery(queryString)) {
+                  while (rs.next()) {
+                    // if (rs.getInt("alert") == 1) {
+                    //   zipCodes.add(rs.getString("zip_code"));
+                    // }
+                    zipCodes.add(rs.getString("zip_code"));
+
+                  }
+              }
+          }
+      }
+  } catch(Exception ex) {
+      ex.printStackTrace();
+  }
+  return zipCodes;
+  }
 }
