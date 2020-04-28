@@ -31,7 +31,10 @@ public class Launcher {
 
     public static void main(String[] args) throws IOException {
 
-
+        //Graph database initialization
+        dbManager = new GraphDBManager();
+        System.out.println("Graph Database Started...");
+        
         System.out.println("Starting CEP...");
         //Embedded database initialization
 
@@ -67,9 +70,6 @@ public class Launcher {
         //Embedded database initialization
         dbEngine = new DBEngine();
         System.out.println("Embedded Database Started...");
-        //Graph database initialization
-        dbManager = new GraphDBManager();
-        System.out.println("Graph Database Started...");
 
         //Embedded HTTP initialization
         startServer();
