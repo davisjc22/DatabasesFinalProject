@@ -74,6 +74,8 @@ public class OutputSubscriber implements InMemoryBroker.Subscriber {
               System.out.println(MMD);
               System.out.println(Zip);
               System.out.println(Status);
+                
+              Launcher.dbManager.createPatient(MMD, Integer.parseInt(Zip), Integer.parseInt(Status));
 
               if (Status.equals("1") || Status.equals("4")) {
                 // if the patient tested negative
