@@ -13,7 +13,7 @@
         <jarName>pubsub-cep-web</jarName>
         <mainClass>cs505pubsubcep.Launcher</mainClass>
         <jersey.version>2.22.2</jersey.version>
-        <derby.version>10.14.2.0</derby.version>
+        <derby.version>10.17.1.0</derby.version>
         <jdk>1.8</jdk>
         <maven.source.version>3.0.0</maven.source.version>
         <maven.javadoc.version>2.10.3</maven.javadoc.version>
